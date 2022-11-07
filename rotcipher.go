@@ -12,21 +12,6 @@ type Cipher struct {
 	Ring     Ring
 }
 
-func Rot5() Cipher {
-	return rotationCipher(5, "0123456789")
-}
-
-func Rot13() Cipher {
-	return rotationCipher(13, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-}
-
-func rotationCipher(rotations int, alphabet string) Cipher {
-	return Cipher{
-		Rotation: rotations,
-		Ring:     makeRing(alphabet),
-	}
-}
-
 func (cipher *Cipher) Rotate(cleartext string) string {
 	cleartextRunes := []rune(cleartext)
 	for index, singleRune := range cleartextRunes {
@@ -40,6 +25,21 @@ func (cipher *Cipher) Rotate(cleartext string) string {
 	}
 
 	return string(cleartextRunes)
+}
+
+func Rot5() Cipher {
+	return rotationCipher(5, "0123456789")
+}
+
+func Rot13() Cipher {
+	return rotationCipher(13, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+}
+
+func rotationCipher(rotations int, alphabet string) Cipher {
+	return Cipher{
+		Rotation: rotations,
+		Ring:     makeRing(alphabet),
+	}
 }
 
 func makeRing(alphabet string) Ring {
