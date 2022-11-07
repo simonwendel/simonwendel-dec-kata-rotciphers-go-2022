@@ -27,7 +27,7 @@ func TestCleartext_Rotate_Rot5(t *testing.T) {
 		{"9*6=42", "4*1=97"},
 		{"4*1=97", "9*6=42"},
 	}
-	ensureRotateCiphersWork(t, Rot5(), testCases)
+	ensureRotateCiphersWork(t, testCases, Rot5())
 }
 
 func TestCleartext_Rotate_Rot13(t *testing.T) {
@@ -35,12 +35,20 @@ func TestCleartext_Rotate_Rot13(t *testing.T) {
 		{"DECERNO", "QRPREAB"},
 		{"QRPREAB", "DECERNO"},
 	}
-	ensureRotateCiphersWork(t, Rot13(), testCases)
+	ensureRotateCiphersWork(t, testCases, Rot13())
 }
 
-func ensureRotateCiphersWork(t *testing.T, cipher Cipher, testCases TestCases) {
+func TestCleartext_Rotate_Rot5Rot13(t *testing.T) {
+	testCases := TestCases{
+		{"DECERNO 9*6=42", "QRPREAB 4*1=97"},
+		{"QRPREAB 4*1=97", "DECERNO 9*6=42"},
+	}
+	ensureRotateCiphersWork(t, testCases, Rot5(), Rot13())
+}
+
+func ensureRotateCiphersWork(t *testing.T, testCases TestCases, ciphers ...Cipher) {
 	for _, testCase := range testCases {
-		actual := testCase.cleartext.Rotate(cipher)
+		actual := testCase.cleartext.Rotate(ciphers...)
 		assert.Equal(t, testCase.expected, actual)
 	}
 }

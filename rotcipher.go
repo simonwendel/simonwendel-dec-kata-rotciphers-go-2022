@@ -15,15 +15,17 @@ type Cipher struct {
 type Cleartext string
 type Ciphertext string
 
-func (cleartext *Cleartext) Rotate(cipher Cipher) Ciphertext {
+func (cleartext *Cleartext) Rotate(ciphers ...Cipher) Ciphertext {
 	cleartextRunes := []rune(*cleartext)
 	for index, currentRune := range cleartextRunes {
-		if currentNode, hasValue := cipher.Ring[currentRune]; hasValue {
-			for n := cipher.Rotation; n > 0; n-- {
-				currentNode = currentNode.Next
-			}
+		for _, currentCipher := range ciphers {
+			if currentNode, hasValue := currentCipher.Ring[currentRune]; hasValue {
+				for n := currentCipher.Rotation; n > 0; n-- {
+					currentNode = currentNode.Next
+				}
 
-			cleartextRunes[index] = currentNode.Value
+				cleartextRunes[index] = currentNode.Value
+			}
 		}
 	}
 
