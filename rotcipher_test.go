@@ -10,6 +10,19 @@ type TestCases []struct {
 	expected  Ciphertext
 }
 
+func TestMakeRing(t *testing.T) {
+	alphabetRunes := []rune("0123456789")
+	ring := makeRing("0123456789")
+
+	for index := 0; index < len(alphabetRunes); index++ {
+		currentRune, nextRune :=
+			alphabetRunes[index],
+			alphabetRunes[(index+1)%len(alphabetRunes)]
+		assert.Equal(t, ring[currentRune].Value, currentRune)
+		assert.Equal(t, ring[currentRune].Next, ring[nextRune])
+	}
+}
+
 func TestRot5(t *testing.T) {
 	rot5 := Rot5()
 	assert.Equal(t, 5, rot5.Rotation)
@@ -50,18 +63,5 @@ func ensureRotateCiphersWork(t *testing.T, testCases TestCases, ciphers ...Ciphe
 	for _, testCase := range testCases {
 		actual := testCase.cleartext.Rotate(ciphers...)
 		assert.Equal(t, testCase.expected, actual)
-	}
-}
-
-func TestMakeRing(t *testing.T) {
-	alphabetRunes := []rune("0123456789")
-	ring := makeRing("0123456789")
-
-	for index := 0; index < len(alphabetRunes); index++ {
-		currentRune, nextRune :=
-			alphabetRunes[index],
-			alphabetRunes[(index+1)%len(alphabetRunes)]
-		assert.Equal(t, ring[currentRune].Value, currentRune)
-		assert.Equal(t, ring[currentRune].Next, ring[nextRune])
 	}
 }
