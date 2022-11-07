@@ -1,5 +1,13 @@
 package main
 
+type Cleartext string
+type Ciphertext string
+
+type Cipher struct {
+	Rotation int
+	Ring     Ring
+}
+
 type Ring map[rune]*Node
 
 type Node struct {
@@ -7,29 +15,12 @@ type Node struct {
 	Next  *Node
 }
 
-type Cipher struct {
-	Rotation int
-	Ring     Ring
-}
-
-type Cleartext string
-type Ciphertext string
-
-func (cleartext *Cleartext) Rotate(ciphers ...Cipher) Ciphertext {
-	cleartextRunes := []rune(*cleartext)
-	for index, currentRune := range cleartextRunes {
-		for _, currentCipher := range ciphers {
-			if currentNode, hasValue := currentCipher.Ring[currentRune]; hasValue {
-				for n := currentCipher.Rotation; n > 0; n-- {
-					currentNode = currentNode.Next
-				}
-
-				cleartextRunes[index] = currentNode.Value
-			}
-		}
+func (node *Node) Translate(distance int) Node {
+	if distance == 0 {
+		return *node
 	}
 
-	return Ciphertext(cleartextRunes)
+	return node.Next.Translate(distance - 1)
 }
 
 func Rot5() Cipher {
@@ -45,6 +36,25 @@ func rotationCipher(rotations int, alphabet string) Cipher {
 		Rotation: rotations,
 		Ring:     makeRing(alphabet),
 	}
+}
+
+func (cleartext *Cleartext) Rotate(ciphers ...Cipher) Ciphertext {
+	runes := []rune(*cleartext)
+	for index, currentRune := range runes {
+		runes[index] = rotateRune(currentRune, ciphers...)
+	}
+
+	return Ciphertext(runes)
+}
+
+func rotateRune(currentRune rune, ciphers ...Cipher) rune {
+	for _, currentCipher := range ciphers {
+		if currentNode, hasValue := currentCipher.Ring[currentRune]; hasValue {
+			currentRune = currentNode.Translate(currentCipher.Rotation).Value
+		}
+	}
+
+	return currentRune
 }
 
 func makeRing(alphabet string) Ring {
