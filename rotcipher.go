@@ -13,51 +13,51 @@ type Cipher struct {
 }
 
 func Rot5() Cipher {
-	return RotN(5, "0123456789")
+	return rotationCipher(5, "0123456789")
 }
 
 func Rot13() Cipher {
-	return RotN(13, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	return rotationCipher(13, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 }
 
-func RotN(n int, alphabet string) Cipher {
+func rotationCipher(rotations int, alphabet string) Cipher {
 	return Cipher{
-		Rotation: n,
+		Rotation: rotations,
 		Ring:     makeRing(alphabet),
 	}
 }
 
-func (c *Cipher) Rotate(cleartext string) string {
-	runes := []rune(cleartext)
-	for i, rune := range runes {
-		if rotated, hasValue := c.Ring[rune]; hasValue {
-			for n := c.Rotation; n > 0; n-- {
-				rotated = rotated.Next
+func (cipher *Cipher) Rotate(cleartext string) string {
+	cleartextRunes := []rune(cleartext)
+	for index, singleRune := range cleartextRunes {
+		if nodeToRotate, hasValue := cipher.Ring[singleRune]; hasValue {
+			for n := cipher.Rotation; n > 0; n-- {
+				nodeToRotate = nodeToRotate.Next
 			}
 
-			runes[i] = rotated.Value
+			cleartextRunes[index] = nodeToRotate.Value
 		}
 	}
 
-	return string(runes)
+	return string(cleartextRunes)
 }
 
 func makeRing(alphabet string) Ring {
-	runes := []rune(alphabet)
+	alphabetRunes := []rune(alphabet)
 	ring := make(Ring)
 
-	for _, number := range runes {
-		ring[number] = &Node{Value: number}
+	for _, singleRune := range alphabetRunes {
+		ring[singleRune] = &Node{Value: singleRune}
 	}
 
-	for i := 0; i < len(runes); i++ {
-		curr := runes[i]
+	for index := 0; index < len(alphabetRunes); index++ {
+		curr := alphabetRunes[index]
 
 		var next rune
-		if i == len(runes)-1 {
-			next = runes[0]
+		if index == len(alphabetRunes)-1 {
+			next = alphabetRunes[0]
 		} else {
-			next = runes[i+1]
+			next = alphabetRunes[index+1]
 		}
 
 		ring[curr].Next = ring[next]

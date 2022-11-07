@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-type RotationTestData []struct {
+type TestCases []struct {
 	cleartext string
 	expected  string
 }
@@ -23,40 +23,42 @@ func TestRot13(t *testing.T) {
 }
 
 func TestCipher_Rotate_Rot5(t *testing.T) {
-	cases := RotationTestData{
+	testCases := TestCases{
 		{"9*6=42", "4*1=97"},
 		{"4*1=97", "9*6=42"},
 	}
-	ensureRotateCiphersWork(t, Rot5(), cases)
+	ensureRotateCiphersWork(t, Rot5(), testCases)
 }
 
 func TestCipher_Rotate_Rot13(t *testing.T) {
-	cases := RotationTestData{
+	testCases := TestCases{
 		{"DECERNO", "QRPREAB"},
 		{"QRPREAB", "DECERNO"},
 	}
-	ensureRotateCiphersWork(t, Rot13(), cases)
+	ensureRotateCiphersWork(t, Rot13(), testCases)
 }
 
-func ensureRotateCiphersWork(t *testing.T, cipher Cipher, cases RotationTestData) {
-	for _, c := range cases {
-		actual := cipher.Rotate(c.cleartext)
-		assert.Equal(t, c.expected, actual)
+func ensureRotateCiphersWork(t *testing.T, cipher Cipher, testCases TestCases) {
+	for _, testCase := range testCases {
+		actual := cipher.Rotate(testCase.cleartext)
+		assert.Equal(t, testCase.expected, actual)
 	}
 }
 
 func TestMakeRing(t *testing.T) {
-	runes := []rune("0123456789")
+	alphabetRunes := []rune("0123456789")
 	ring := makeRing("0123456789")
 
-	lastIndex := len(runes) - 1
+	lastIndex := len(alphabetRunes) - 1
+	lastRune := alphabetRunes[lastIndex]
+	firstRune := alphabetRunes[0]
 
-	for i := 0; i < lastIndex; i++ {
-		curr, next := runes[i], runes[i+1]
-		assert.Equal(t, ring[curr].Value, curr)
-		assert.Equal(t, ring[curr].Next, ring[next])
+	for index := 0; index < lastIndex; index++ {
+		currentRune, nextRune := alphabetRunes[index], alphabetRunes[index+1]
+		assert.Equal(t, ring[currentRune].Value, currentRune)
+		assert.Equal(t, ring[currentRune].Next, ring[nextRune])
 	}
 
-	assert.Equal(t, runes[lastIndex], ring[runes[lastIndex]].Value)
-	assert.Equal(t, ring[runes[0]], ring[runes[lastIndex]].Next)
+	assert.Equal(t, lastRune, ring[lastRune].Value)
+	assert.Equal(t, ring[firstRune], ring[lastRune].Next)
 }
