@@ -12,19 +12,22 @@ type Cipher struct {
 	Ring     Ring
 }
 
-func (cipher *Cipher) Rotate(cleartext string) string {
-	cleartextRunes := []rune(cleartext)
-	for index, singleRune := range cleartextRunes {
-		if nodeToRotate, hasValue := cipher.Ring[singleRune]; hasValue {
+type Cleartext string
+type Ciphertext string
+
+func (cleartext *Cleartext) Rotate(cipher Cipher) Ciphertext {
+	cleartextRunes := []rune(*cleartext)
+	for index, currentRune := range cleartextRunes {
+		if currentNode, hasValue := cipher.Ring[currentRune]; hasValue {
 			for n := cipher.Rotation; n > 0; n-- {
-				nodeToRotate = nodeToRotate.Next
+				currentNode = currentNode.Next
 			}
 
-			cleartextRunes[index] = nodeToRotate.Value
+			cleartextRunes[index] = currentNode.Value
 		}
 	}
 
-	return string(cleartextRunes)
+	return Ciphertext(cleartextRunes)
 }
 
 func Rot5() Cipher {

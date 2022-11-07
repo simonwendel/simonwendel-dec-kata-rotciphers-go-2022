@@ -6,8 +6,8 @@ import (
 )
 
 type TestCases []struct {
-	cleartext string
-	expected  string
+	cleartext Cleartext
+	expected  Ciphertext
 }
 
 func TestRot5(t *testing.T) {
@@ -22,7 +22,7 @@ func TestRot13(t *testing.T) {
 	assert.Equal(t, 26, len(rot13.Ring))
 }
 
-func TestCipher_Rotate_Rot5(t *testing.T) {
+func TestCleartext_Rotate_Rot5(t *testing.T) {
 	testCases := TestCases{
 		{"9*6=42", "4*1=97"},
 		{"4*1=97", "9*6=42"},
@@ -30,7 +30,7 @@ func TestCipher_Rotate_Rot5(t *testing.T) {
 	ensureRotateCiphersWork(t, Rot5(), testCases)
 }
 
-func TestCipher_Rotate_Rot13(t *testing.T) {
+func TestCleartext_Rotate_Rot13(t *testing.T) {
 	testCases := TestCases{
 		{"DECERNO", "QRPREAB"},
 		{"QRPREAB", "DECERNO"},
@@ -40,7 +40,7 @@ func TestCipher_Rotate_Rot13(t *testing.T) {
 
 func ensureRotateCiphersWork(t *testing.T, cipher Cipher, testCases TestCases) {
 	for _, testCase := range testCases {
-		actual := cipher.Rotate(testCase.cleartext)
+		actual := testCase.cleartext.Rotate(cipher)
 		assert.Equal(t, testCase.expected, actual)
 	}
 }
@@ -56,7 +56,4 @@ func TestMakeRing(t *testing.T) {
 		assert.Equal(t, ring[currentRune].Value, currentRune)
 		assert.Equal(t, ring[currentRune].Next, ring[nextRune])
 	}
-
-	assert.Equal(t, lastRune, ring[lastRune].Value)
-	assert.Equal(t, ring[firstRune], ring[lastRune].Next)
 }
