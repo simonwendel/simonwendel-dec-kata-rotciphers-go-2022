@@ -46,21 +46,19 @@ func makeRing(alphabet string) Ring {
 	alphabetRunes := []rune(alphabet)
 	ring := make(Ring)
 
-	for _, singleRune := range alphabetRunes {
-		ring[singleRune] = &Node{Value: singleRune}
+	for _, currentRune := range alphabetRunes {
+		ring[currentRune] = &Node{Value: currentRune}
 	}
 
-	for index := 0; index < len(alphabetRunes); index++ {
-		curr := alphabetRunes[index]
-
-		var next rune
+	for index, currentRune := range alphabetRunes {
+		var nextRune rune
 		if index == len(alphabetRunes)-1 {
-			next = alphabetRunes[0]
+			nextRune = alphabetRunes[0]
 		} else {
-			next = alphabetRunes[index+1]
+			nextRune = alphabetRunes[index+1]
 		}
 
-		ring[curr].Next = ring[next]
+		ring[currentRune].Next = ring[nextRune]
 	}
 
 	return ring
