@@ -49,12 +49,10 @@ func TestMakeRing(t *testing.T) {
 	alphabetRunes := []rune("0123456789")
 	ring := makeRing("0123456789")
 
-	lastIndex := len(alphabetRunes) - 1
-	lastRune := alphabetRunes[lastIndex]
-	firstRune := alphabetRunes[0]
-
-	for index := 0; index < lastIndex; index++ {
-		currentRune, nextRune := alphabetRunes[index], alphabetRunes[index+1]
+	for index := 0; index < len(alphabetRunes); index++ {
+		currentRune, nextRune :=
+			alphabetRunes[index],
+			alphabetRunes[(index+1)%len(alphabetRunes)]
 		assert.Equal(t, ring[currentRune].Value, currentRune)
 		assert.Equal(t, ring[currentRune].Next, ring[nextRune])
 	}
