@@ -1,4 +1,4 @@
-// RotCiphers - Rotating ciphers using complicated data structures
+// Complicated RotCiphers - Rotating ciphers using complicated data structures
 // Copyright (C) 2022  Simon Wendel
 //
 // This program is free software: you can redistribute it and/or modify
