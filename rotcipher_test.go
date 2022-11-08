@@ -34,8 +34,8 @@ func TestMakeRing(t *testing.T) {
 		currentRune, nextRune :=
 			alphabetRunes[index],
 			alphabetRunes[(index+1)%len(alphabetRunes)]
-		assert.Equal(t, ring[currentRune].Value, currentRune)
-		assert.Equal(t, ring[currentRune].Next, ring[nextRune])
+		assert.Equal(t, currentRune, ring[currentRune].Value)
+		assert.Equal(t, ring[nextRune], ring[currentRune].Next)
 	}
 }
 
