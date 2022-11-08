@@ -27,8 +27,8 @@ type TestCases []struct {
 }
 
 func TestMakeRing(t *testing.T) {
-	alphabetRunes := []rune("0123456789")
-	ring := makeRing("0123456789")
+	alphabetRunes := []rune("Q024ABC68")
+	ring := makeRing("Q024ABC68")
 
 	for index := 0; index < len(alphabetRunes); index++ {
 		currentRune, nextRune :=
