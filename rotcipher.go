@@ -77,9 +77,7 @@ func makeRing(alphabet string) Ring {
 	alphabetRunes := []rune(alphabet)
 	ring := make(Ring)
 
-	for _, currentRune := range alphabetRunes {
-		ring[currentRune] = &Node{Value: currentRune}
-	}
+	ring.fill(alphabetRunes)
 
 	for index, currentRune := range alphabetRunes {
 		var nextRune rune
@@ -93,4 +91,10 @@ func makeRing(alphabet string) Ring {
 	}
 
 	return ring
+}
+
+func (ring *Ring) fill(alphabetRunes []rune) {
+	for _, currentRune := range alphabetRunes {
+		(*ring)[currentRune] = &Node{Value: currentRune}
+	}
 }
